@@ -1,0 +1,35 @@
+
+version: 2
+
+sources:
+  - name: ha_biblio
+    database: db_dev_snowflake_mvp
+    schema: ha_biblio
+    tables:
+      - name: work
+      - name: edition
+      - name: binding
+      
+  - name: ha_amazon
+    database: db_dev_snowflake_mvp
+    schema: ha_amazon
+    tables:
+      - name: amazon_preorders
+      - name: amazon_sales_diagnostic_ordered_revenue_all
+
+  - name: staging
+    database: db_dev_snowflake_mvp
+    schema: staging
+    tables:
+      - name: amazon_preorders
+
+models:
+    - name: title_info_biblio_sat
+      description: "title_info_biblio_sat"
+      columns:
+          - name: work_ref
+            description: "the primary key for this table"
+            tests:
+                - unique
+                - not_null
+

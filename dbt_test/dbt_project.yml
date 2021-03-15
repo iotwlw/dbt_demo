@@ -6,6 +6,8 @@ name: 'dbt_Test'
 version: '1.0.0'
 config-version: 2
 
+vars:
+  no_of_days: '3'
 # This setting configures which "profile" dbt uses for this project.
 profile: 'snowflake'
 
@@ -32,7 +34,18 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 models:
+  +transient: false
   dbt_Test:
-      # Applies to all files under models/example/
-      example:
-          materialized: view
+      # Applies to all files under models/example/         
+      data_vault:
+        +materialized: view
+        +schema: dv
+      
+      ha_amazon:
+        +materialized: table
+        +schema: ha_amazon
+      
+      info_core:
+        +materialized: view
+        +schema: info_core
+      
