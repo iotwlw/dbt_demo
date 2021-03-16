@@ -21,6 +21,8 @@ jobs:
  - name: weekdays
    schedule: 30 7 * * 1-5 # The example will run every weekday at 7:30am.
    steps:
+     - name: debug models
+       command: dbt debug	
      - name: run models
        command: dbt run
 
