@@ -1,4 +1,4 @@
-{{ config(materialized='view',schema='info_core') }}
+{{ config(materialized='view') }}
 
 with cte_my_date as 
 (
