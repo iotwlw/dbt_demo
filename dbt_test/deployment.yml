@@ -7,7 +7,7 @@ jobs:
  - name: daily
    schedule: 0 12 * * * # Define when this job should run, using cron format. This example will run every day at 12:00pm (according to your warehouse timezone). For help with cron formatting, visit https://crontab.guru/.
    steps:
-       name: debug models
+     - name: debug models
        command: dbt --debug run 
      - name: run models # Give each step in your job a name. This will enable you to track the steps in the logs.
        command: dbt run # Enter the dbt command that should run in this step. This example will run all your models. For a list of available commands visit https://docs.getdbt.com/reference/model-selection-syntax/.
