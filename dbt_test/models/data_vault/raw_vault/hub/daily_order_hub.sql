@@ -2,7 +2,7 @@
 
 with amazon_orders as 
 (
-    select * from {{ source('ha_amazon','amazon_sales_diagnostic_ordered_revenue_all') }}
+    select * from {{ source('ha_amazon','amazon_sales_diagnostic_ordered_revenue') }}
 ),
 final as
 ( 
@@ -14,9 +14,10 @@ select distinct
     ,_fivetran_synced as dw_load_date_time
 from amazon_orders
 where isbn_13 <> '0'
-and isbn_13 <> 'unknown'
-and isbn_13 <> 'eisbn'
-and isbn_13 <> 'isbn-13'
+and isbn_13 <> 'UNKNOWN'
+and isbn_13 <> 'EISBN'
+and isbn_13 <> 'ISBN-13'
+and reporting_range = 'Daily'
 ) 
 select * 
 from final

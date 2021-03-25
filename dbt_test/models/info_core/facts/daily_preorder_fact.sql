@@ -17,7 +17,8 @@ final as (
         posat.dw_load_date_time,
         posat.preorder_date,
         posat.pre_ordered_revenue,
-        posat.pre_ordered_units
+        posat.pre_ordered_units,
+        posat.average_pre_order_sales_price
     from daily_preorder_sat as posat
     join title_info_daily_preorder_link as polnk 
         on polnk.daily_preorder_key = posat.business_key

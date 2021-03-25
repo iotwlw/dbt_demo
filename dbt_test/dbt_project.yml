@@ -8,6 +8,7 @@ config-version: 2
 
 vars:
   no_of_days: '3'
+  
 # This setting configures which "profile" dbt uses for this project.
 profile: 'snowflake'
 
@@ -39,13 +40,8 @@ models:
       # Applies to all files under models/example/         
       data_vault:
         +materialized: view
-        +schema: dv
-      
-      ha_amazon:
-        +materialized: table
-        +schema: ha_amazon
-      
+        +schema: dvv      
       info_core:
         +materialized: view
-        +schema: info_core
+        +schema: info_coree
       

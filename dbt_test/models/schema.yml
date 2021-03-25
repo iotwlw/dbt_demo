@@ -15,7 +15,7 @@ sources:
     schema: ha_amazon
     tables:
       - name: amazon_preorders
-      - name: amazon_sales_diagnostic_ordered_revenue_all
+      - name: amazon_sales_diagnostic_ordered_revenue
       - name: amazon_sales_diagnostic_shipped_cogs
       - name: amazon_sales_diagnostic_shipped_revenue
       - name: amazon_traffic_diagnos
