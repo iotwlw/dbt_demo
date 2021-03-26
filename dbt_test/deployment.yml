@@ -8,8 +8,8 @@ jobs:
  - name: daily
    schedule: 0 12 * * * # Define when this job should run, using cron format. This example will run every day at 12:00pm (according to your warehouse timezone). For help with cron formatting, visit https://crontab.guru/.
    steps:
-     - name: debug models
-       command: dbt --debug run 
+    #  - name: debug models
+    #    command: dbt --debug run 
      - name: run  data_vault models 
        command: dbt run --models  data_vault.* 
      - name: run   info_core models 
