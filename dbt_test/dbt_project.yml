@@ -40,8 +40,8 @@ models:
       # Applies to all files under models/example/         
       data_vault:
         +materialized: view
-        +schema: dvv      
+        +schema: dv      
       info_core:
         +materialized: view
-        +schema: info_coree
+        +schema: info_core
       
