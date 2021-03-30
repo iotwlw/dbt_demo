@@ -1,4 +1,4 @@
-{{ config(materialized = 'view') }} 
+{{ config(materialized = 'table') }} 
 
 with daily_order_sat as (
     select *
