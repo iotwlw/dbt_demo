@@ -11,7 +11,7 @@ jobs:
     #  - name: debug models
     #    command: dbt --debug run 
      - name: run  data_vault models 
-       command: dbt run --models  data_vault.* 
+       command: dbt run --models  data_vault.*
      - name: run   info_core models 
        command: dbt run --models info_core.* 
     #  - name: test models

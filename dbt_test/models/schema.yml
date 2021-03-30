@@ -9,6 +9,12 @@ sources:
       - name: work
       - name: edition
       - name: binding
+
+  - name: ha_sap
+    database: db_dev_snowflake_mvp
+    schema: ha_sap
+    tables: 
+      - name: date_dim      
       
   - name: ha_amazon
     database: db_dev_snowflake_mvp
@@ -20,6 +26,12 @@ sources:
       - name: amazon_sales_diagnostic_shipped_revenue
       - name: amazon_traffic_diagnos
       - name: amazon_search_terms
+
+  - name: staging
+    database: db_dev_snowflake_mvp
+    schema: staging
+    tables:
+      - name: dimm_date
 
 models:
     - name: title_info_biblio_sat

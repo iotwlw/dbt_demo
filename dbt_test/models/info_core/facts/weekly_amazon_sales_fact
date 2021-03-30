@@ -1,0 +1,48 @@
+{{ config(materialized = 'view') }} 
+
+with weekly_order_fact as (
+    select *
+    from {{ ref('weekly_order_fact') }} 
+),
+weekly_preorder_fact as (
+    select *
+    from {{ ref('weekly_preorder_fact') }} 
+),
+weekly_shipped_cogs_fact as (
+    select *
+    from {{ ref('weekly_shipped_cogs_fact') }} 
+),
+weekly_shipped_revenue_fact as (
+    select *
+    from {{ ref('weekly_shipped_revenue_fact') }} 
+),
+-- weekly_traffic_diagnos_fact as (
+--     select *
+--     from {{ ref('weekly_traffic_diagnos_fact') }} 
+-- ),
+final as (
+    select distinct
+         po.preorder_date as date         
+        ,'weekly' as frequency        
+        ,po.pre_ordered_units
+        ,po.pre_ordered_revenue
+        ,po.average_pre_order_sales_price
+        ,of.ordered_revenue
+        ,of.ordered_units
+        ,of.average_sales_price
+        ,of.glance_views
+        ,of.conversion_rate
+        ,sc.shipped_cogs
+        ,sr.shipped_units
+        ,sr.shipped_units_of_total
+        ,sr.shipped_revenue
+        ,sr.free_replacements
+        ,sr.customer_returns
+    from weekly_preorder_fact as po
+    Left Join weekly_order_fact as of On of.business_key = po.business_key and po.preorder_date = of.order_date
+    Left Join weekly_shipped_cogs_fact as sc On sc.business_key = po.business_key and po.preorder_date = sc.ship_date
+    Left Join weekly_shipped_revenue_fact as sr On sr.business_key = po.business_key and po.preorder_date = sr.ship_date
+    --Left Join weekly_traffic_diagnos_fact as td On td.business_key = po.business_key and po.preorder_date = td.trading_date   
+)
+select *
+from final

@@ -4,24 +4,18 @@ with daily_preorder_sat as (
     select *
     from {{ ref('daily_preorder_sat') }} 
 ),
-title_info_daily_preorder_link as (
-    select *
-    from {{ ref('title_info_daily_preorder_link') }} 
-),
 final as (
     select distinct 
-        polnk.title_info_key as title_info_business_key,
-        polnk.daily_preorder_key as daily_preorder_key,
-        posat.isbn_13,
-        posat.record_source,
-        posat.dw_load_date_time,
-        posat.preorder_date,
-        posat.pre_ordered_revenue,
-        posat.pre_ordered_units,
-        posat.average_pre_order_sales_price
-    from daily_preorder_sat as posat
-    join title_info_daily_preorder_link as polnk 
-        on polnk.daily_preorder_key = posat.business_key
+        title_info_key as title_info_business_key,
+        isbn_13,
+        record_source,
+        dw_load_date_time,
+        preorder_date,
+        pre_ordered_units,
+        pre_ordered_revenue,        
+        average_pre_order_sales_price
+    from daily_preorder_sat
+    where expired_at = '9999-12-31'    
 )
 select *
 from final

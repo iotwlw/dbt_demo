@@ -40,6 +40,7 @@ select distinct
     ,b.edition_origpubdate as original_publication_date
     ,b.edition_ean         as isbn_13
     ,b.binding_longname    as binding
+    ,datediff(month,b.edition_origpubdate,CURRENT_DATE()) as Months_until_publication
 from title_info_amazon_sat a
 left join title_info_biblio_sat b 
     on a.business_key = b.edition_ean

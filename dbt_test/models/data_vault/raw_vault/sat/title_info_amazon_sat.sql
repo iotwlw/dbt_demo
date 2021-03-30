@@ -85,9 +85,6 @@ select distinct
 from amazon_orders
 where cast(isbn_13 as varchar(256)) <> '0'
 and sequencenumber =1
--- and isbn_13 <> 'UNKNOWN'
--- and isbn_13 <> 'EISBN'
--- and isbn_13 <> 'ISBN-13''
 
 union
 select distinct

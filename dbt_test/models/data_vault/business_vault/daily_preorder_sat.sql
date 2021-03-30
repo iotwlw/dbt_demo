@@ -1,35 +1,37 @@
 {{ config(materialized='view') }}
 
-with daily_preorder_amazon_sat as 
+with amazon_preorders as 
 (
     select * 
-    ,  coalesce ( lead (dw_load_date_time ) over(partition by business_key,preorder_date order by dw_load_date_time), cast( '9999-12-31' as datetime)  ) as expirydatetime
-    from {{ ref('daily_preorder_amazon_sat') }}
+    ,  coalesce ( lead (_fivetran_synced ) over(partition by isbn_13,cast(left(right(_file,10),6) as date) order by _fivetran_synced), cast( '9999-12-31' as datetime)  ) as expirydatetime
+    from {{ source('ha_amazon','amazon_preorders') }}
+    where reporting_range = 'Daily'
 ),
 final as
 ( 
 select distinct
-     business_key
-    ,preorder_date
+     concat(isbn_13,'|"|~|"|',left(right(_file,10),6),'|"|~|"|"amazon"') as business_key
+    ,cast(isbn_13 as varchar(256)) as title_info_key
+    ,cast(left(right(_file,10),6) as date) as preorder_date
     ,isbn_13
-    ,record_source
-    ,dw_load_date_time
-    ,pre_ordered_revenue
+    ,_file as record_source
+    ,_fivetran_synced as dw_load_date_time    
     ,pre_ordered_units
+    ,pre_ordered_units_prior_period
+    ,pre_ordered_revenue
+    ,pre_ordered_revenue_prior_period
     ,average_pre_order_sales_price
-from daily_preorder_amazon_sat
-union
-select distinct
-     business_key
-    ,preorder_date
-    ,isbn_13
-    ,record_source
-    ,dw_load_date_time
-    ,-pre_ordered_revenue
-    ,-pre_ordered_units
-    ,-average_pre_order_sales_price
-from daily_preorder_amazon_sat
-where expirydatetime <> '9999-12-31'
+    ,average_pre_order_sales_price_previous_period
+    ,_fivetran_synced as effective_at
+    ,expirydatetime as expired_at
+    ,iff(expirydatetime = '9999-12-31',1,0) as is_latest
+from amazon_preorders
+where 
+--Data validations to exclude invalid ISBN
+isbn_13 <> '0'
+and isbn_13 <> 'UNKNOWN'
+and isbn_13 <> 'EISBN'
+and isbn_13 <> 'ISBN-13'
 ) 
 select * 
 from final 
