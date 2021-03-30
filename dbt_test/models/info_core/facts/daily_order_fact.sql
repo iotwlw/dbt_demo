@@ -1,4 +1,4 @@
-{{ config(materialized = 'table') }} 
+{{ config(materialized = 'view') }} 
 
 with daily_order_sat as (
     select *
@@ -17,7 +17,7 @@ final as (
         ,glance_views
         ,conversion_rate        
     from daily_order_sat 
-    --where expired_at = '9999-12-31'
+    where expired_at = '9999-12-31'
 )
 select *
 from final
