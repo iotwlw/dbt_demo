@@ -3,16 +3,16 @@
 with amazon_shipped_cogs as 
 (
     select * 
-    ,  coalesce ( lead (_fivetran_synced ) over(partition by isbn_13,cast(left(right(_file,10),6) as date) order by _fivetran_synced), cast( '9999-12-31' as datetime)  ) as expirydatetime
+    ,  coalesce ( lead (_fivetran_synced ) over(partition by isbn_13,to_date(left(right(_file,10),6),'ddmmyy') order by _fivetran_synced), cast( '9999-12-31' as datetime)  ) as expirydatetime
     from {{ source('ha_amazon','amazon_sales_diagnostic_shipped_cogs') }}
     where reporting_range = 'Daily'
 ),
 final as
 ( 
 select distinct
-      concat(isbn_13,'|"|~|"|',left(right(_file,10),6),'|"|~|"|"amazon"') as business_key
+      concat(isbn_13,'|"|~|"|',to_date(left(right(_file,10),6),'ddmmyy'),'|"|~|"|"amazon"') as business_key
     ,cast(isbn_13 as varchar(256)) as title_info_key
-    ,cast(left(right(_file,10),6) as date) as ship_date
+    ,to_date(left(right(_file,10),6),'ddmmyy') as ship_date
     ,isbn_13
     ,_file as record_source
     ,_fivetran_synced as dw_load_date_time  

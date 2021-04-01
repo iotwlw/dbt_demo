@@ -1,8 +1,8 @@
 {{ config(materialized = 'view') }} 
 
-with daily_amazon_all_sat as (
+with weekly_amazon_all_sat as (
     select *
-    from {{ ref('daily_amazon_all_sat') }} 
+    from {{ ref('weekly_amazon_all_sat') }} 
 ),
 final as (
     select 
@@ -21,7 +21,7 @@ final as (
         ,shipped_revenue
         ,free_replacements
         ,customer_returns
-    from daily_amazon_all_sat     
+    from weekly_amazon_all_sat     
 )
 select *
 from final

@@ -23,7 +23,7 @@ select distinct
     ,a.subcategory	       as amazon_subcategory
     ,a.category	           as amazon_category
     ,a.author_artist       as amazon_author
-    ,a.binding		       as amazon_binding
+    ,replace(upper(a.binding),'_','') as amazon_binding
     ,a.release_date        as amazon_release_date
     ,a.sitb_enabled        as amazon_sitb_enabled
     --biblio

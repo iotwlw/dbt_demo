@@ -1,39 +1,31 @@
 {{ config(materialized='view') }}
 
-with amazon_traffic_diagnos as 
+with amazon_preorders as 
 (
     select * 
     ,  coalesce ( lead (_fivetran_synced ) over(partition by isbn_13,to_date(left(right(_file,10),6),'ddmmyy') order by _fivetran_synced), cast( '9999-12-31' as datetime)  ) as expirydatetime
-    from {{ source('ha_amazon','amazon_traffic_diagnos') }}
-    where reporting_range = 'Daily'
+    from {{ source('ha_amazon','amazon_preorders') }}
+    where reporting_range = 'Weekly'
 ),
 final as
 ( 
 select distinct
      concat(isbn_13,'|"|~|"|',to_date(left(right(_file,10),6),'ddmmyy'),'|"|~|"|"amazon"') as business_key
     ,cast(isbn_13 as varchar(256)) as title_info_key
-    ,to_date(left(right(_file,10),6),'ddmmyy') as trading_date
+    ,to_date(left(right(_file,10),6),'ddmmyy') as preorder_date
     ,isbn_13
     ,_file as record_source
-    ,_fivetran_synced as dw_load_date_time
-    ,conversion_rate 
-    ,change_in_conversion_prior_period 
-    ,change_in_conversion_last_year 
-    ,unique_visitors_prior_period 
-    ,unique_visitors_last_year 
-    ,conversion_percentile 
-    ,glance_views
-    ,change_in_gv_prior_period 
-    ,change_in_gv_last_year 
-    ,change_in_glance_view_prior_period 
-    ,_of_total_gvs 
-    ,fast_track_glance_view 
-    ,fast_track_glance_view_prior_period 
-    ,fast_track_glance_view_last_year
+    ,_fivetran_synced as dw_load_date_time    
+    ,pre_ordered_units
+    ,pre_ordered_units_prior_period
+    ,pre_ordered_revenue
+    ,pre_ordered_revenue_prior_period
+    ,average_pre_order_sales_price
+    ,average_pre_order_sales_price_previous_period
     ,_fivetran_synced as effective_at
     ,expirydatetime as expired_at
     ,iff(expirydatetime = '9999-12-31',1,0) as is_latest
-from amazon_traffic_diagnos
+from amazon_preorders
 where 
 --Data validations to exclude invalid ISBN
 isbn_13 <> '0'

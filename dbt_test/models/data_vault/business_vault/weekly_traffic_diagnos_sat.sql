@@ -5,7 +5,7 @@ with amazon_traffic_diagnos as
     select * 
     ,  coalesce ( lead (_fivetran_synced ) over(partition by isbn_13,to_date(left(right(_file,10),6),'ddmmyy') order by _fivetran_synced), cast( '9999-12-31' as datetime)  ) as expirydatetime
     from {{ source('ha_amazon','amazon_traffic_diagnos') }}
-    where reporting_range = 'Daily'
+    where reporting_range = 'Weekly'
 ),
 final as
 ( 
